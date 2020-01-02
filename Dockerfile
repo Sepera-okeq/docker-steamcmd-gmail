@@ -1,10 +1,28 @@
-FROM golang:latest
+FROM golang as build
 
-MAINTAINER Florian Kinder <florian.kinder@fankserver.com>
+WORKDIR /app
+
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
+COPY . .
+
+# it will take the flags from the environment
+RUN go build
+
+### App
+FROM ubuntu:18.04 as app
 
 # Install dependencies
 RUN apt-get update &&\
-	apt-get install --no-install-recommends --no-install-suggests -y curl lib32gcc1 &&\
+	apt-get install --no-install-recommends --no-install-suggests -y curl lib32gcc1 ca-certificates &&\
 	rm -rf /var/lib/apt/lists/*
 
 # Download and extract SteamCMD
@@ -12,14 +30,8 @@ RUN mkdir -p /opt/steamcmd &&\
 	cd /opt/steamcmd &&\
 	curl -s http://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -vxz
 
-# Compile application
-RUN mkdir -p /go/src/github.com/fank/docker-steamcmd-gmail
-ADD . /go/src/github.com/fank/docker-steamcmd-gmail
-WORKDIR /go/src/github.com/fank/docker-steamcmd-gmail
-RUN go get ./... &&\
-	go install github.com/fank/docker-steamcmd-gmail &&\
-	cp client_secret.json /client_secret.json &&\
-	rm /go/src/* -rf
+# Run it once so it updates, and the update is cached
+RUN /opt/steamcmd/steamcmd.sh +quit
 
-# This container will be executable
-ENTRYPOINT ["/go/bin/docker-steamcmd-gmail"]
+COPY --from=build app /
+ENTRYPOINT ["/steamcmd_gmail"]
