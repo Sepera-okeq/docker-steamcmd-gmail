@@ -1,4 +1,5 @@
 FROM golang as build
+LABEL author="Antoni Baum (Yard1) <antoni.baum@protonmail.com> & Florian Kinder <florian.kinder@fankserver.com>"
 
 WORKDIR /app
 
@@ -19,6 +20,7 @@ RUN go build
 
 ### App
 FROM ubuntu:18.04 as app
+LABEL author="Antoni Baum (Yard1) <antoni.baum@protonmail.com> & Florian Kinder <florian.kinder@fankserver.com>"
 
 # Install dependencies
 RUN apt-get update &&\
