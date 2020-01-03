@@ -1,15 +1,14 @@
-[yard1/steamcmd_gmail](https://hub.docker.com/repository/docker/yard1/steamcmd_gmail)
-===================
+# [yard1/steamcmd_gmail](https://hub.docker.com/repository/docker/yard1/steamcmd_gmail)
 
 Steamcmd with Steam Guard support by using GMail API.
 
 This Docker image is used as a build stage of [Yard1/pdx-steam-workshop-publisher-action](https://github.com/Yard1/pdx-steam-workshop-publisher-action).
 
-# Overview
+## Overview
 
 This Docker container allows for automatic SteamCMD login for accounts with email Steam Guard enabled. It uses Google API to read the Steam Guard code from the given GMail account, and automatically inputs it into SteamCMD when asked.
 
-# Getting Google API credentials
+## Getting Google API credentials
 
 Create empty credential file.
 
