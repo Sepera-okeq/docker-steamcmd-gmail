@@ -1,3 +1,6 @@
+// MIT License
+// Copyright (c) 2016 Florian Kinder
+
 package main
 
 import (
